@@ -1,0 +1,27 @@
+[
+    {
+        "key": "enum3",
+        "line": 3,
+        "message": "Changed Column: unit | Last: unit4 -> New: unit3"
+    },
+    {
+        "key": "enum3",
+        "line": 3,
+        "message": "Changed Column: line_number | Last: 3 -> New: 2"
+    },
+    {
+        "key": "enum5",
+        "line": 2,
+        "message": "Changed Column: line_number | Last: 2 -> New: 4"
+    },
+    {
+        "key": "enum2",
+        "line": 1,
+        "message": "ADDED: {'main': 'main2', 'enum': 'enum2', 'unit': 'unit2', 'velue': 'value2', 'status': 'status2', 'line_number': 1}"
+    },
+    {
+        "key": "enum4",
+        "line": 3,
+        "message": "ADDED: {'main': 'main4', 'enum': 'enum4', 'unit': 'unit4', 'velue': 'value4', 'status': 'status4', 'line_number': 3}"
+    }
+]
