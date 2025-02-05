@@ -1,0 +1,25 @@
+def compare_files(last_file, new_file, key_columns):
+        last_data = {FileComparisonModel.create_key(row, key_columns): row for row in FileComparisonModel.read_csv(last_file)}
+        new_data = {FileComparisonModel.create_key(row, key_columns): row for row in FileComparisonModel.read_csv(new_file)}
+
+        logs_dict = []
+        if not last_data or not new_data:
+            return [{"key": "ERROR", "message": "Dosya boş veya okunamıyor"}]
+
+        for key, last_row in last_data.items():
+            if key not in new_data:
+                logs_dict.append({"key": key, "line": last_row["line_number"], "message": f"DELETED: {last_row}"})
+            elif last_row != new_data[key]:
+                for col in last_row.keys():
+                    if last_row[col] != new_data[key][col]:
+                        logs_dict.append({
+                            "key": key,
+                            "line": last_row["line_number"],
+                            "message": f"Changed Column: {col} | Last: {last_row[col]} -> New: {new_data[key][col]}"
+                        })
+
+        for key, new_row in new_data.items():
+            if key not in last_data:
+                logs_dict.append({"key": key, "line": new_row["line_number"], "message": f"ADDED: {new_row}"})
+
+        return logs_dict
