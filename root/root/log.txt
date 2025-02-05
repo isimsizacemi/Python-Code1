@@ -1,0 +1,46 @@
+[
+    {
+        "key": "enum1",
+        "message": " Modified --> SSenumName: SESESES changes to -> SSenumName"
+    },
+    {
+        "key": "enum1",
+        "message": " Modified --> position: position1 changes to -> position12"
+    },
+    {
+        "key": "enum2",
+        "message": "  deleted  : {'Main': 'main1', 'Enum': 'enum1', 'Unit': 'unit1', 'Type': 'type1', 'direction': 'direction1', 'SSenumName': 'SSenumName', 'position': 'position12'}  "
+    },
+    {
+        "key": "enum3",
+        "message": "  deleted  : {'Main': 'main1', 'Enum': 'enum1', 'Unit': 'unit1', 'Type': 'type1', 'direction': 'direction1', 'SSenumName': 'SSenumName', 'position': 'position12'}  "
+    },
+    {
+        "key": "enum4",
+        "message": " Modified --> Main: main4 changes to -> main5"
+    },
+    {
+        "key": "enum4",
+        "message": " Modified --> Unit: unit4 changes to -> unit5"
+    },
+    {
+        "key": "enum4",
+        "message": " Modified --> Type: type4 changes to -> type5"
+    },
+    {
+        "key": "enum4",
+        "message": " Modified --> direction: direction4 changes to -> direction5"
+    },
+    {
+        "key": "enum4",
+        "message": " Modified --> SSenumName: SSenumName4 changes to -> SSenumName5"
+    },
+    {
+        "key": "enum4",
+        "message": " Modified --> position: position4 changes to -> position5"
+    },
+    {
+        "key": "enum5",
+        "message": "  deleted  : {'Main': 'main5', 'Enum': 'enum4', 'Unit': 'unit5', 'Type': 'type5', 'direction': 'direction5', 'SSenumName': 'SSenumName5', 'position': 'position5'}  "
+    }
+]

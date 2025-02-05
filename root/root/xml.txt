@@ -1,0 +1,1 @@
+svn log --verbose --xml --username <user> --password <password>
