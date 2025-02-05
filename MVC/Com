@@ -1,5 +1,4 @@
 import csv
-import json
 
 class FileComparisonModel:
     
@@ -35,33 +34,24 @@ class FileComparisonModel:
 
                     for col in last_row.keys():
                         if str(last_row[col]) != str(new_row[col]):
-                            print(f"Modified: {col}: {last_row[col]} -> {new_row[col]}")
-                            changes.append({
-                                "key": last_key,
-                                "message": f"Modified: {col}: {last_row[col]} -> {new_row[col]}"
-                            })
+                            message = f"Modified: {col}: {last_row[col]} -> {new_row[col]}"
+                            print(message)
+                            log.write(f"Key: {last_key} | {message}\n")  # **Her değişikliği anında log dosyasına yaz**
+                            changes.append({"key": last_key, "message": message})
+
                 else:
-                    print(f"Deleted: {last_row}")
-                    changes.append({
-                        "key": last_key,
-                        "message": f"Deleted: {last_row}"
-                    })
+                    message = f"Deleted: {last_row}"
+                    print(message)
+                    log.write(f"Key: {last_key} | {message}\n")  # **Silinen satırları da dosyaya yaz**
+                    changes.append({"key": last_key, "message": message})
 
             # Eklenen yeni verileri kontrol et
             for new_key, new_row in new_data.items():
                 if new_key not in last_data:
-                    print(f"Added: {new_row}")
-                    changes.append({
-                        "key": new_key,
-                        "message": f"Added: {new_row}"
-                    })
+                    message = f"Added: {new_row}"
+                    print(message)
+                    log.write(f"Key: {new_key} | {message}\n")  # **Eklenen satırları da yaz**
+                    changes.append({"key": new_key, "message": message})
 
-            # Log dosyasına yaz
-            if changes:
-                for change in changes:
-                    log.write(" | ".join(["{}: {}".format(k, v) for k, v in change.items()]) + '\n')
-
-                return changes
-            else:
-                return "No changes detected"
+        return changes if changes else "No changes detected"
 
