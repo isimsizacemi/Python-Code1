@@ -1,25 +1,61 @@
-def compare_files(last_file, new_file, key_columns):
-        last_data = {FileComparisonModel.create_key(row, key_columns): row for row in FileComparisonModel.read_csv(last_file)}
-        new_data = {FileComparisonModel.create_key(row, key_columns): row for row in FileComparisonModel.read_csv(new_file)}
+  def compare_files(new,last,key_columns,log_file):
+        new_row_keys  = FileCompilerModel.read_csv_as_dict(new, key_columns) 
+        last_row_keys = FileCompilerModel.read_csv_as_dict(last, key_columns)  
+        changes = []
+       
+        
+        with open(log_file,"w") as log:
+            
+            for last_key , last_row in last_row_keys.items():
+                    
+                if last_key in new_row_keys:
+                   
+                    new_row = new_row_keys[last_key]
+                    
+                    for col in last_row.keys():
+                
+                        if str(last_row[col]) != str(new_row[col]):
+                            
+                            print(f"Modi  {col}: {last_row[col]} changes to -> {new_row[col]}")
+                            changes.append({
+                                "key"     : f"{last_key}",
+                                "message" : f" Modified --> {col}: {last_row[col]} changes to -> {new_row[col]}" })
+                    
+                         
+                        
+                else : 
+                     
+                     print(f"deleted : {last_row}")
+                     changes.append({
+                         "key"     : f"{last_key}",
+                         "message" : f"  deleted  : {new_row}  "})
+                        
+                         
+                
+                            
+                
+               
+                    
+            for new_key , new_row in new_row_keys.items():
+        
+               
+                if new_key not in last_row_keys:
+                  
+                    print(f"added : {new_row}")
+                    changes.append({
+                            "key"     : f" {new_key}  ",
+                            "message" : f"  added  : {new_row}  "})
+            
+            print(changes)
+            if changes : 
+                for values in changes:     
+                    log.write(" ".join(["{}: {}".format(value_key, digit) for value_key, digit in values.items()]) + '\n')
+                    
+                    
+                    return changes
+                for values in changes:     
+                    log.write(" ".join(["{}: {}".format(value_key, digit) for value_key, digit in values.items()]) + '\n')
+            else : 
+                    return "Cahanges File Not Found"
 
-        logs_dict = []
-        if not last_data or not new_data:
-            return [{"key": "ERROR", "message": "Dosya boş veya okunamıyor"}]
-
-        for key, last_row in last_data.items():
-            if key not in new_data:
-                logs_dict.append({"key": key, "line": last_row["line_number"], "message": f"DELETED: {last_row}"})
-            elif last_row != new_data[key]:
-                for col in last_row.keys():
-                    if last_row[col] != new_data[key][col]:
-                        logs_dict.append({
-                            "key": key,
-                            "line": last_row["line_number"],
-                            "message": f"Changed Column: {col} | Last: {last_row[col]} -> New: {new_data[key][col]}"
-                        })
-
-        for key, new_row in new_data.items():
-            if key not in last_data:
-                logs_dict.append({"key": key, "line": new_row["line_number"], "message": f"ADDED: {new_row}"})
-
-        return logs_dict
+            
