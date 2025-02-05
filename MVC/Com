@@ -1,61 +1,67 @@
-  def compare_files(new,last,key_columns,log_file):
-        new_row_keys  = FileCompilerModel.read_csv_as_dict(new, key_columns) 
-        last_row_keys = FileCompilerModel.read_csv_as_dict(last, key_columns)  
-        changes = []
-       
-        
-        with open(log_file,"w") as log:
-            
-            for last_key , last_row in last_row_keys.items():
-                    
-                if last_key in new_row_keys:
-                   
-                    new_row = new_row_keys[last_key]
-                    
-                    for col in last_row.keys():
-                
-                        if str(last_row[col]) != str(new_row[col]):
-                            
-                            print(f"Modi  {col}: {last_row[col]} changes to -> {new_row[col]}")
-                            changes.append({
-                                "key"     : f"{last_key}",
-                                "message" : f" Modified --> {col}: {last_row[col]} changes to -> {new_row[col]}" })
-                    
-                         
-                        
-                else : 
-                     
-                     print(f"deleted : {last_row}")
-                     changes.append({
-                         "key"     : f"{last_key}",
-                         "message" : f"  deleted  : {new_row}  "})
-                        
-                         
-                
-                            
-                
-               
-                    
-            for new_key , new_row in new_row_keys.items():
-        
-               
-                if new_key not in last_row_keys:
-                  
-                    print(f"added : {new_row}")
-                    changes.append({
-                            "key"     : f" {new_key}  ",
-                            "message" : f"  added  : {new_row}  "})
-            
-            print(changes)
-            if changes : 
-                for values in changes:     
-                    log.write(" ".join(["{}: {}".format(value_key, digit) for value_key, digit in values.items()]) + '\n')
-                    
-                    
-                    return changes
-                for values in changes:     
-                    log.write(" ".join(["{}: {}".format(value_key, digit) for value_key, digit in values.items()]) + '\n')
-            else : 
-                    return "Cahanges File Not Found"
+import csv
+import json
 
-            
+class FileComparisonModel:
+    
+    @staticmethod
+    def read_csv_as_dict(file_path, key_columns):
+        """CSV dosyasını okuyup, belirlenen sütunları anahtar olarak kullanarak bir sözlük döndürür."""
+        data_dict = {}
+        try:
+            with open(file_path, "r", encoding="utf-8-sig", newline="") as file:
+                reader = csv.DictReader(file)
+                for row in reader:
+                    key = "_".join(str(row.get(col, "N/A")) for col in key_columns)  # Eksik sütunları "N/A" ile doldur
+                    data_dict[key] = row
+        except Exception as e:
+            print(f"CSV okuma hatası: {e}")
+            return {}
+        return data_dict
+
+    @staticmethod
+    def compare_files(new_file, last_file, key_columns, log_file="comparison_log.txt"):
+        """İki dosyayı karşılaştırarak değişiklikleri, silinenleri ve eklenenleri log dosyasına kaydeder."""
+        new_data = FileComparisonModel.read_csv_as_dict(new_file, key_columns)
+        last_data = FileComparisonModel.read_csv_as_dict(last_file, key_columns)
+        
+        changes = []
+
+        with open(log_file, "w", encoding="utf-8") as log:
+
+            # Silinen veya değiştirilmiş verileri kontrol et
+            for last_key, last_row in last_data.items():
+                if last_key in new_data:
+                    new_row = new_data[last_key]
+
+                    for col in last_row.keys():
+                        if str(last_row[col]) != str(new_row[col]):
+                            print(f"Modified: {col}: {last_row[col]} -> {new_row[col]}")
+                            changes.append({
+                                "key": last_key,
+                                "message": f"Modified: {col}: {last_row[col]} -> {new_row[col]}"
+                            })
+                else:
+                    print(f"Deleted: {last_row}")
+                    changes.append({
+                        "key": last_key,
+                        "message": f"Deleted: {last_row}"
+                    })
+
+            # Eklenen yeni verileri kontrol et
+            for new_key, new_row in new_data.items():
+                if new_key not in last_data:
+                    print(f"Added: {new_row}")
+                    changes.append({
+                        "key": new_key,
+                        "message": f"Added: {new_row}"
+                    })
+
+            # Log dosyasına yaz
+            if changes:
+                for change in changes:
+                    log.write(" | ".join(["{}: {}".format(k, v) for k, v in change.items()]) + '\n')
+
+                return changes
+            else:
+                return "No changes detected"
+
